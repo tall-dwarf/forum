@@ -1,0 +1,39 @@
+<?php
+//var_dump(empty($user['photo']));
+
+?>
+
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <section class="profile">
+        <div class="container">
+            <div class="profile-inner">
+                <h2>Профиль пользователя</h2>
+
+                    <form enctype="multipart/form-data" method="post">
+                        <label>Загрузить новое фото</label>
+                        <input name="photo" accept="image/png, image/gif, image/jpeg" type="file">
+                        <button>Загрузить фото</button>
+                    </form>
+                <?php if(isset($user['photo'])): ?>
+                    <div>
+                        <span>Ваше фото</span>
+                        <img src="/<?= $user['photo'] ?>" alt="">
+                    </div>
+                <?php endif; ?>
+                <h4>Логин пользователя: <?= $user['login'] ?></h4>
+                <h4>Почта пользователя: <?= $user['email'] ?></h4>
+                <h4>Дата создания аккаунта: <?= $user['created_at'] ?></h4>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

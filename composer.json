@@ -3,7 +3,9 @@
         "miladrahimi/phprouter": "^5.1",
         "nilportugues/sql-query-builder": "^1.8",
       "ext-pdo": "*",
-        "rakit/validation": "^1.4"
+        "rakit/validation": "^1.4",
+        "gumlet/php-image-resize": "^2.0",
+      "ext-gd": "*"
     },
     "autoload": {
         "psr-4": {

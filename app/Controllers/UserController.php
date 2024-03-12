@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Helpers\Cryptography;
 use App\Services\UsersAuthService;
 use MiladRahimi\PhpRouter\View\View;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,7 +41,8 @@ class UserController
             $user = new User();
             $userData = $user->create($body);
             UsersAuthService::setToken($userData['token']);
-            return new RedirectResponse("/");
+
+            return new RedirectResponse("/profile");
         }catch (\Exception $exception){
             return $view->make('register', ['registerError' => 'Произошла ошибка регистрации']);
         }
@@ -61,12 +63,14 @@ class UserController
         }
 
         try {
-
             $user = new User();
             $userData = $user->getUser($body['password'], $body['email']);
-            $userToken = $user->updateToken($userData['id']);
+
+            $userToken = Cryptography::generateToken();
+            $user->update($userData['id'], ['token' => $userToken]);
             UsersAuthService::setToken($userToken);
-            return new RedirectResponse("/");
+
+            return new RedirectResponse("/profile");
         }catch (\Exception $exception){
             return $view->make('auth', ['authError' => $exception->getMessage()]);
         }

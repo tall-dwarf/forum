@@ -16,7 +16,7 @@ abstract class Entity
         $this->db = new DB();
     }
 
-    public function sendQuery(QueryInterface $query)
+    public function sendQuery(QueryInterface $query): bool|array
     {
         $sql = $this->builder->writeFormatted($query);
         $values = $this->builder->getValues();
@@ -42,6 +42,16 @@ abstract class Entity
             ->setValues($data);
 
         return $this->sendQuery($query);
+    }
 
+    public function update(int $id, array $values): bool|array
+    {
+        $query = $this->builder->update()
+            ->setTable('user')
+            ->setValues($values)
+            ->where()
+            ->equals('id', $id)
+            ->end();
+        return $this->sendQuery($query);
     }
 }
