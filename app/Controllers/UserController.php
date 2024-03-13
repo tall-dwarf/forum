@@ -41,9 +41,9 @@ class UserController
             $user = new User();
             $userData = $user->create($body);
             UsersAuthService::setToken($userData['token']);
-
             return new RedirectResponse("/profile");
         }catch (\Exception $exception){
+            print_r($exception->getMessage());
             return $view->make('register', ['registerError' => 'Произошла ошибка регистрации']);
         }
     }

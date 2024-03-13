@@ -36,7 +36,7 @@ class ProfileController
         $image->save($photoPath);
 
         $user = new User();
-        $user->updatePhoto($userData['id'], $photoPath);
+        $user->update($userData['id'], ['photo' => $photoPath]);
 
         if(file_exists($userData['photo'])){
             unlink($userData['photo']);

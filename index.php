@@ -2,7 +2,8 @@
 require __DIR__ . "/vendor/autoload.php";
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 ini_set('memory_limit', '-1');
-
+//efefWewef5 Zrhenjq12
+use App\Controllers\ForumController;
 use App\Controllers\MainController;
 use App\Controllers\ProfileController;
 use App\Controllers\UserController;
@@ -40,7 +41,7 @@ $router->get('/auth', [UserController::class, 'authPage']);
 
 $router->get('/', [MainController::class, 'index']);
 
-
+$router->get('/forum', [ForumController::class, 'index']);
 
 $router->group(['middleware' => [AuthMiddleware::class]], function(Router $router) {
     $router->get('/profile', [ProfileController::class, 'profilePage']);
