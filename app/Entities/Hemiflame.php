@@ -16,7 +16,6 @@ class Hemiflame
         $pdo = new \PDO("mysql:host={$config['host']};dbname={$config['dbname']}", $config['login'], $config['password'], [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,]);
         $pdo->exec("set names utf8");
         Query::$global['pdo'] = $pdo;
-
         $this->query = new Query();
     }
 
@@ -51,7 +50,7 @@ class Hemiflame
     /**
      * @throws QueryException
      */
-    public function getByField(string $field, $value): ?array
+    public function getByField(string $field, $value): array | null
     {
         $this->query->select()->from($this->table)->where($field, $value);
         $this->query->execute();

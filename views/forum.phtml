@@ -26,11 +26,12 @@ require  __DIR__ . "/layout/header.php";
                 <?php foreach ($records as $record): ?>
                 <div class="forum-item">
                     <h2>
-                        <a href="/"><?= $record['name'] ?></a>
+                        <a href="/forum/<?= $record['id'] ?>"><?= $record['name'] ?></a>
                         <p><?= $record['text'] ?></p>
                     </h2>
                 </div>
                 <?php endforeach; ?>
+
                 <?php
                 $queryNext = '';
                 $queryPref = '';

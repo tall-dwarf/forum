@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Validations\UserRegisterValidate;
 use MiladRahimi\PhpRouter\View\View;
 
 class MainController

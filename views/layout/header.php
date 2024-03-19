@@ -20,6 +20,9 @@
             <li>
                 <a href="/">Главная страница</a>
             </li>
+            <li>
+                <a href="/forum">Форум</a>
+            </li>
             <?php if (!$token): ?>
                 <li>
                     <a href="/auth">Авторизация</a>

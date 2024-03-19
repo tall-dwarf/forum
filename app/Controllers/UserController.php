@@ -3,13 +3,15 @@ namespace App\Controllers;
 
 use App\Helpers\Cryptography;
 use App\Services\UsersAuthService;
+use App\Validations\UserAuthValidate;
+use App\Validations\UserRegisterValidate;
 use MiladRahimi\PhpRouter\View\View;
 use Psr\Http\Message\ServerRequestInterface;
 use App\Entities\User;
 use Laminas\Diactoros\Response\RedirectResponse;
 class UserController
 {
-    public function registerPage(View $view)
+    public function registerPage(View $view, )
     {
         return $view->make('register');
     }
@@ -17,54 +19,36 @@ class UserController
     {
         return $view->make('auth');
     }
-    public function register(ServerRequestInterface $request, View $view){
-        $body = $request->getParsedBody();
-
-        $errors = [];
-        if(!preg_match('/^\w{5,40}$/', $body['login'])){
-            $errors['login'] = 'Длинна логина должна быть от 5 до 40 символов';
-        }
-        if(!preg_match('/^\w{5,50}$/', $body['password'])){
-            $errors['password'] = 'Пароль слишком слабый';
-        }
-        if(!filter_var($body['email'], FILTER_VALIDATE_EMAIL)){
-            $errors['email'] = 'Ошибка при вводе почты';
-        }
-        if($body['confirm_password'] !== $body['password']){
-            $errors['confirm_password'] = 'Пароли не совпадают';
-        }
-        if(count($errors)){
-            return $view->make('register', ['errors' => $errors, 'body' => $body]);
+    public function register(View $view, UserRegisterValidate $userRegister){
+        if($userRegister->isValid()) {
+            return $view->make('register',
+                ['errors' => $userRegister->getErrors(), 'body' => $userRegister->getData()]);
         }
 
         try {
+            $data = $userRegister->getData();
+
             $user = new User();
-            $userData = $user->create($body);
+            $userData = $user->create($data);
+
             UsersAuthService::setToken($userData['token']);
             return new RedirectResponse("/profile");
         }catch (\Exception $exception){
-            print_r($exception->getMessage());
-            return $view->make('register', ['registerError' => 'Произошла ошибка регистрации']);
+            return $view->make('register', ['registerError' => $exception->getMessage()]);
         }
     }
 
-    public function auth(ServerRequestInterface $request, View $view){
-        $body = $request->getParsedBody();
-
-        $errors = [];
-        if(!filter_var($body['email'], FILTER_VALIDATE_EMAIL)){
-            $errors['email'] = 'Ошибка при вводе почты';
-        }
-        if(!preg_match('/^\w{5,50}$/', $body['password'])){
-            $errors['password'] = 'Ошибка при вводе пароля';
-        }
-        if(count($errors)){
-            return $view->make('auth', ['errors' => $errors, 'body' => $body]);
+    public function auth(ServerRequestInterface $request, View $view, UserAuthValidate $authValidate){
+        if($authValidate->isValid()) {
+            return $view->make('auth',
+                ['errors' => $authValidate->getErrors(), 'body' => $authValidate->getData()]);
         }
 
         try {
+            $data = $authValidate->getData();
+
             $user = new User();
-            $userData = $user->getUser($body['password'], $body['email']);
+            $userData = $user->getUser($data['password'], $data['email']);
 
             $userToken = Cryptography::generateToken();
             $user->update($userData['id'], ['token' => $userToken]);

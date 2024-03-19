@@ -1,0 +1,24 @@
+<?php
+require  __DIR__ . "/layout/header.php";
+?>
+
+<section class="record">
+    <h1><?= $record['name'] ?></h1>
+    <p>
+        <?= $record['text'] ?>
+    </p>
+    <h4><?= $record['date'] ?></h4>
+
+    <?php if(isset($record['tags'])): ?>
+    <div>
+        <h3>Теги:</h3>
+        <ul>
+            <?php foreach ($record['tags'] as $tag): ?>
+            <li>
+                <a href="/"><?= $tag['name'] ?></a>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+</section>

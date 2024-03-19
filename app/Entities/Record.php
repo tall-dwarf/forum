@@ -2,6 +2,8 @@
 
 namespace App\Entities;
 
+use HemiFrame\Lib\SQLBuilder\Query;
+use HemiFrame\Lib\SQLBuilder\QueryException;
 use NilPortugues\Sql\QueryBuilder\Builder\GenericBuilder;
 use NilPortugues\Sql\QueryBuilder\Builder\MySqlBuilder;
 use NilPortugues\Sql\QueryBuilder\Syntax\OrderBy;
@@ -34,5 +36,32 @@ class Record extends Hemiflame
 
         $this->query->execute();
         return $this->query->fetchArrays();
+    }
+
+    /**
+     * @throws QueryException
+     */
+    public function getItem($id)
+    {
+        $this->query->select('*')->from($this->table)->where('id', $id);
+        $this->query->execute();
+        $record = $this->query->fetchFirstArray();
+        if(!$record){
+            return null;
+        }
+
+        $this->query = new Query();
+
+        $this->query
+            ->select('*')
+            ->from('tag', 't')
+            ->innerJoin('record_on_tag' ,'rt', 't.id=rt.tag_id')
+            ->where('rt.record_id', $id);
+
+        $this->query->execute();
+        $tags = $this->query->fetchArrays();
+
+        $record['tags'] = $tags;
+        return $record;
     }
 }

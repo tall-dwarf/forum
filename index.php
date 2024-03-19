@@ -11,6 +11,7 @@ use App\Services\UsersAuthService;
 use Laminas\Diactoros\Response\RedirectResponse;
 use MiladRahimi\PhpRouter\Router;
 use Psr\Http\Message\ServerRequestInterface;
+use App\Validations\UserRegisterValidate;
 
 // Если вынести в другое место мидлвар не работает
 class AuthMiddleware
@@ -31,6 +32,7 @@ class AuthMiddleware
 }
 
 $router = Router::create();
+$router->getContainer()->singleton(UserRegisterValidate::class, UserRegisterValidate::class);
 
 $router->setupView(__DIR__ . '/views');
 
@@ -40,8 +42,10 @@ $router->post('/auth', [UserController::class, 'auth']);
 $router->get('/auth', [UserController::class, 'authPage']);
 
 $router->get('/', [MainController::class, 'index']);
+$router->post('/', [MainController::class, 'index']);
 
 $router->get('/forum', [ForumController::class, 'index']);
+$router->get('/forum/{id}', [ForumController::class, 'record']);
 
 $router->group(['middleware' => [AuthMiddleware::class]], function(Router $router) {
     $router->get('/profile', [ProfileController::class, 'profilePage']);

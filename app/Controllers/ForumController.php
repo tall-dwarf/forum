@@ -26,4 +26,20 @@ class ForumController
             print_r($e->getMessage());
         }
     }
+
+    public function record($id, View $view)
+    {
+        if(!is_numeric($id)){
+            return $view->make('404');
+        }
+
+        $record = new Record();
+        $recordItem = $record->getItem($id);
+
+        if(!$recordItem){
+            return $view->make('404');
+        }
+
+        return $view->make('record', ['record' => $recordItem]);
+    }
 }
