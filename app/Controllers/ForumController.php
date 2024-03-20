@@ -2,9 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Entities\Comment;
 use App\Entities\Hemiflame;
 use App\Entities\Record;
 use App\Entities\Tag;
+use App\Services\UsersAuthService;
 use MiladRahimi\PhpRouter\View\View;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -23,11 +25,11 @@ class ForumController
 
             return $view->make('forum', ['tags' => $tags, 'records' => $records]);
         }catch (\Exception $e){
-            print_r($e->getMessage());
+            return $view->make('forum', ['message' => 'Произошла ошибка']);
         }
     }
 
-    public function record($id, View $view)
+    public function record($id, View $view, ServerRequestInterface $request)
     {
         if(!is_numeric($id)){
             return $view->make('404');
@@ -40,6 +42,12 @@ class ForumController
             return $view->make('404');
         }
 
-        return $view->make('record', ['record' => $recordItem]);
+        $tag = new Tag();
+        $recordItem['tags'] = $tag->getByRecordId($recordItem['id']);
+
+        $comment = new Comment();
+        $recordItem['comments'] = $comment->getByRecordId($recordItem['id']);
+
+        return $view->make('record', ['record' => $recordItem, 'user' => $request->getAttribute('user')]);
     }
 }

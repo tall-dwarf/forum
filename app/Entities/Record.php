@@ -26,7 +26,7 @@ class Record extends Hemiflame
 
         if(isset($params['tag'])){
             $this->query
-                ->innerJoin('record_on_tags' ,'rt', 'r.id=rt.record_id')
+                ->innerJoin('record_on_tag' ,'rt', 'r.id=rt.record_id')
                 ->innerJoin('tag', 't', 't.id=rt.tag_id')
                 ->andWhere('t.id', $params['tag']);
         }
@@ -43,25 +43,9 @@ class Record extends Hemiflame
      */
     public function getItem($id)
     {
+        $this->query->beginTransaction();
         $this->query->select('*')->from($this->table)->where('id', $id);
         $this->query->execute();
-        $record = $this->query->fetchFirstArray();
-        if(!$record){
-            return null;
-        }
-
-        $this->query = new Query();
-
-        $this->query
-            ->select('*')
-            ->from('tag', 't')
-            ->innerJoin('record_on_tag' ,'rt', 't.id=rt.tag_id')
-            ->where('rt.record_id', $id);
-
-        $this->query->execute();
-        $tags = $this->query->fetchArrays();
-
-        $record['tags'] = $tags;
-        return $record;
+        return $this->query->fetchFirstArray();
     }
 }

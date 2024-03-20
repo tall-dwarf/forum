@@ -27,6 +27,7 @@ class UsersAuthService extends Service
         $data = explode(":", $token, 2);
 
         if(count($data) != 2){
+            setcookie('token', '', -10, '/', '', false, true);
             return null;
         }
 
@@ -34,10 +35,12 @@ class UsersAuthService extends Service
         $time = unserialize(base64_decode($time));
 
         if(!is_numeric($time)){
+            setcookie('token', '', -10, '/', '', false, true);
             return null;
         }
 
         if(($time - (new \DateTime())->format('U')) < 0){
+            setcookie('token', '', -10, '/', '', false, true);
             return null;
         }
 

@@ -35,6 +35,8 @@ class Hemiflame
     public function update(int $id, array $values): void
     {
         $this->query->update($this->table)->set($values)->andWhere('id', $id);
+        print_r($this->query->getQueryString(true));
+        die();
         $this->query->execute();
     }
 

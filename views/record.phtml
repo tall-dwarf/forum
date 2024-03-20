@@ -3,22 +3,102 @@ require  __DIR__ . "/layout/header.php";
 ?>
 
 <section class="record">
-    <h1><?= $record['name'] ?></h1>
-    <p>
-        <?= $record['text'] ?>
-    </p>
-    <h4><?= $record['date'] ?></h4>
+    <div class="container">
+        <h1><?= $record['name'] ?></h1>
 
-    <?php if(isset($record['tags'])): ?>
-    <div>
-        <h3>Теги:</h3>
-        <ul>
-            <?php foreach ($record['tags'] as $tag): ?>
-            <li>
-                <a href="/"><?= $tag['name'] ?></a>
-            </li>
+        <?php if(isset($record['tags'])): ?>
+            <div>
+                <h3>Теги:</h3>
+                <ul>
+                    <?php foreach ($record['tags'] as $tag): ?>
+                        <li>
+                            <a href="/"><?= $tag['name'] ?></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <p>
+            <?= $record['text'] ?>
+        </p>
+        <h4><?= $record['date'] ?></h4>
+
+
+
+        <div class="comments">
+            <h2>Список комментариев</h2>
+            <?php foreach ($record['comments'] as $comment): ?>
+                <div class="comments-item">
+                    <div>
+                        <h4>Пользователь <?= $comment['login'] ?></h4>
+                        <img src="<?= $comment['photo'] ?? '' ?>" alt="">
+                    </div>
+                    <p>
+                        <?= $comment['text'] ?>
+                    </p>
+                </div>
             <?php endforeach; ?>
-        </ul>
+        </div>
+
+        <?php if(isset($_COOKIE['token'])): ?>
+            <div>
+                <h3>Добавить комментарий</h3>
+                <form class="d-flex flex-column justify-content-start align-items-start" id="form">
+                    <input class="form-record" name="recordId" hidden="hidden" value="<?= $record['id'] ?>" type="text">
+                    <textarea name="text"></textarea >
+                    <span class="textarea-error text-danger"></span>
+                    <button>Добавить</button>
+                    <span class="form-error text-danger"></span>
+                </form>
+            </div>
+        <?php endif; ?>
     </div>
-    <?php endif; ?>
+
+    <script>
+        const form = document.querySelector('#form')
+        const formError = form.querySelector('.form-error')
+
+        const textarea = form.querySelector('textarea')
+        const textareaError = form.querySelector('.textarea-error')
+
+        const record = form.querySelector('.form-record')
+
+        async function sendCommentForm(form) {
+            const response = await fetch('/comment', { body: new FormData(form), method: 'POST' });
+            const res = await response.json()
+
+            if(res.ok){
+                return location.reload();
+            }
+
+            if(res.message){
+                formError.innerText = res?.message
+            }
+
+            if(res.errors){
+                textareaError.innerText = res.errors.text
+                formError.innerText = res.errors.recordId
+            }
+        }
+
+        function validateCommentForm(){
+            if(textarea.value.length < 3){
+                textareaError.innerText = 'Поле обязательно для заполнения'
+                return false
+            }
+            if(!parseInt(record.value)){
+                formError.innerText = 'Ошибка отправки формы'
+                return false
+            }
+            return true
+        }
+
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault()
+            if(!validateCommentForm()) return null;
+            await sendCommentForm(form)
+        })
+    </script>
 </section>
