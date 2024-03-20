@@ -49,7 +49,7 @@ class UserController
             $user = new User();
 
             $userData = $user->getUser($data['password'], $data['email']);
-            $user->updateQuery();
+            $user->refreshQuery();
 
             $userToken = Cryptography::generateToken();
             UsersAuthService::setToken($userToken);

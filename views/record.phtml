@@ -12,7 +12,7 @@ require  __DIR__ . "/layout/header.php";
                 <ul>
                     <?php foreach ($record['tags'] as $tag): ?>
                         <li>
-                            <a href="/"><?= $tag['name'] ?></a>
+                            <a href="/forum?tag[]=<?= $tag['id'] ?>"><?= $tag['name'] ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>

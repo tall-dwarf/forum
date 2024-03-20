@@ -5,6 +5,7 @@ ini_set('memory_limit', '-1');
 
 use App\Controllers\CommentController;
 use App\Controllers\ForumController;
+use App\Controllers\RecordController;
 use App\Controllers\MainController;
 use App\Controllers\ProfileController;
 use App\Controllers\UserController;
@@ -58,10 +59,16 @@ $router->post('/', [MainController::class, 'index']);
 $router->get('/forum', [ForumController::class, 'index']);
 $router->get('/forum/{id}', [ForumController::class, 'record']);
 
+
+
 $router->group(['middleware' => [AuthMiddleware::class]], function(Router $router) {
     $router->get('/profile', [ProfileController::class, 'profilePage']);
     $router->post('/profile', [ProfileController::class, 'loadPhoto']);
+
     $router->post('/comment', [CommentController::class, 'store']);
+
+    $router->post('/record', [RecordController::class, 'store']);
+    $router->get('/record', [RecordController::class, 'create']);
 });
 
 $router->dispatch();

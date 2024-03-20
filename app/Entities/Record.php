@@ -18,7 +18,8 @@ class Record extends Hemiflame
         $this->query
             ->select('r.*')
             ->from('record', 'r')
-            ->groupBy('r.id');
+            ->groupBy('r.id')
+        ->orderBy('r.date DESC');
 
         if(isset($params['name']) && strlen($params['name']) > 0){
             $this->query->andWhere('r.name,r.text', "{$params['name']}", 'fulltext');
@@ -43,9 +44,24 @@ class Record extends Hemiflame
      */
     public function getItem($id)
     {
-        $this->query->beginTransaction();
         $this->query->select('*')->from($this->table)->where('id', $id);
         $this->query->execute();
         return $this->query->fetchFirstArray();
+    }
+
+    public function create(array $values)
+    {
+        $this->query->insertInto($this->table)->set(
+            ['name' => $values['data']['name'], 'text' => $values['data']['text'], 'user_id' => $values['user']['id']]);
+        $this->query->execute();
+
+        $recordId = $this->query->getLastInsertId();
+        $this->refreshQuery();
+
+        $this->query
+            ->insertInto('record_on_tag')
+            ->values(['record_id', 'tag_id'],
+            array_map(fn($tag) => [$recordId, $tag], $values['data']['tags']));
+        $this->query->execute();
     }
 }

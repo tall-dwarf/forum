@@ -19,7 +19,7 @@ class Hemiflame
         $this->query = new Query();
     }
 
-    public function updateQuery(): void
+    public function refreshQuery(): void
     {
         $this->query = new Query();
     }

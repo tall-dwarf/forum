@@ -1,0 +1,30 @@
+<?php
+require  __DIR__ . "/layout/header.php";
+?>
+
+<section class="record-create">
+    <div class="container">
+        <h2>Создание записи</h2>
+        <form class="d-flex flex-column justify-content-start align-items-start" method="post">
+            <input value="<?= $data['name'] ?? '' ?>" placeholder="Название записи" name="name" type="text">
+            <span class="text-danger"><?= $errors['name'] ?? '' ?></span>
+            <textarea <?= $data['text'] ?? '' ?> placeholder="Текст записи" style="resize: none;" class="w-50" name="text"></textarea >
+            <span class="text-danger"><?=  $errors['text'] ?? '' ?></span>
+            <h4>Список тегов</h4>
+            <ul class="tag-list">
+                <?php foreach ($tags as $tag): ?>
+                    <li class="tag-item">
+                        <label for="tag<?= $tag['id'] ?>"><?= $tag['name'] ?></label>
+                        <input
+                            <?php if(isset($_POST['tags']) && in_array($tag['id'], $_POST['tags']) ): ?>
+                                checked
+                            <?php endif; ?>
+                            id="tag<?= $tag['id'] ?>"
+                            value="<?= $tag['id'] ?>" name="tags[]" type="checkbox">
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <button>Создать</button>
+        </form>
+    </div>
+</section>
