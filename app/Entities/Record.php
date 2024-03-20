@@ -32,11 +32,14 @@ class Record extends Hemiflame
                 ->andWhere('t.id', $params['tag']);
         }
 
+        $this->query->execute();
+        $elementCount = $this->query->rowCount();
+
         $page = $params['page'] ?? 1;
         $this->query->paginationLimit((int)$page, 10);
-
         $this->query->execute();
-        return $this->query->fetchArrays();
+
+        return ['data' => $this->query->fetchArrays(), 'pages' => ceil($elementCount / 10)];
     }
 
     /**

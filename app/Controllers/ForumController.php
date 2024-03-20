@@ -23,7 +23,7 @@ class ForumController
             $record = new Record();
             $records = $record->getAll($queryParams);
 
-            return $view->make('forum', ['tags' => $tags, 'records' => $records]);
+            return $view->make('forum', ['tags' => $tags, 'records' => $records['data'], 'pages' => $records['pages']]);
         }catch (\Exception $e){
             return $view->make('forum', ['message' => 'Произошла ошибка']);
         }

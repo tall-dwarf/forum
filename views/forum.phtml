@@ -41,31 +41,31 @@ require  __DIR__ . "/layout/header.php";
                 <?php endforeach; ?>
 
                 <?php
-                $queryNext = '';
-                $queryPref = '';
-
-                if(empty($_SERVER['QUERY_STRING'])){
-                    $_SERVER['QUERY_STRING'] = http_build_query(['page' => 2]);
-                    $queryNext = http_build_query(['page' => 2]);
-                    $queryPref = http_build_query(['page' => 1]);
-                }else{
-                    $query = [];
-                    parse_str($_SERVER['QUERY_STRING'], $query);
-
-                    $query['page'] = isset($query['page']) ? $query['page'] + 1 : 2;
-                    $queryNext = http_build_query($query);
-
-                    $query['page'] = max(1, $query['page'] - 2); ;
-                    $queryPref = http_build_query($query);
-                }
 
                 $url = $_SERVER['REQUEST_URI'];
                 $url = explode('?', $url);
                 $url = $url[0];
 
                 ?>
-                <a href="<?= $url ?>?<?= $queryPref ?>">Предыдущая страница</a>
-                <a href="<?= $url ?>?<?= $queryNext ?>">Следующая страница</a>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <?php for ($i = 1; $i <= $pages; $i++): ?>
+                        <?php
+                            $isActive = false;
+                            if(isset($_GET['page']) && $_GET['page'] == $i){
+                                $isActive = true;
+                            }
+                            if(empty($_GET['page']) && $i == 1){
+                                $isActive = true;
+                            }
+                            ?>
+                        <li class="page-item">
+                            <a class="page-link <?= $isActive ? 'active' : '' ?>"
+                               href="<?= $url ?>?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"><?= $i ?></a>
+                        </li>
+                        <?php endfor; ?>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
