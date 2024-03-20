@@ -19,12 +19,17 @@ class Hemiflame
         $this->query = new Query();
     }
 
+    public function updateQuery(): void
+    {
+        $this->query = new Query();
+    }
+
     /**
      * @throws QueryException
      */
     public function getAll(array $params): ?array
     {
-        $this->query->select('*')->from($this->table)->where('id', 1);
+        $this->query->select('*')->from($this->table);
         $this->query->execute();
         return $this->query->fetchArrays();
     }
@@ -35,8 +40,6 @@ class Hemiflame
     public function update(int $id, array $values): void
     {
         $this->query->update($this->table)->set($values)->andWhere('id', $id);
-        print_r($this->query->getQueryString(true));
-        die();
         $this->query->execute();
     }
 

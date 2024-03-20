@@ -44,19 +44,21 @@ class UserController
                 ['errors' => $authValidate->getErrors(), 'body' => $authValidate->getData()]);
         }
 
-//        try {
+        try {
             $data = $authValidate->getData();
-
             $user = new User();
+
             $userData = $user->getUser($data['password'], $data['email']);
-            print_r($userData);
+            $user->updateQuery();
+
             $userToken = Cryptography::generateToken();
-            $user->update($userData['id'], ['token' => $userToken]);
             UsersAuthService::setToken($userToken);
 
+            $user->update($userData['id'], ['token' => $userToken]);
+
             return new RedirectResponse("/profile");
-//        }catch (\Exception $exception){
-//            return $view->make('auth', ['authError' => $exception->getMessage()]);
-//        }
+        }catch (\Exception $exception){
+            return $view->make('auth', ['authError' => $exception->getMessage()]);
+        }
     }
 }

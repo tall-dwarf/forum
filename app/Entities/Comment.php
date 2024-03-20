@@ -18,7 +18,8 @@ class Comment extends Hemiflame
             ->select(['c.*', 'u.login', 'u.photo'])
             ->from('comment', 'c')
             ->where('c.record_id', $recordId)
-            ->innerJoin('user', 'u', 'c.user_id=u.id');
+            ->innerJoin('user', 'u', 'c.user_id=u.id')
+        ->orderBy('c.date DESC');
         $this->query->execute();
         return $this->query->fetchArrays();
     }

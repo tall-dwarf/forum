@@ -24,17 +24,16 @@ require  __DIR__ . "/layout/header.php";
         </p>
         <h4><?= $record['date'] ?></h4>
 
-
-
-        <div class="comments">
+        <div class="comments mt-5">
             <h2>Список комментариев</h2>
             <?php foreach ($record['comments'] as $comment): ?>
-                <div class="comments-item">
-                    <div>
+                <div class="comments-item mb-5">
+                    <div class="d-flex">
+                        <img class="w-10" src="/<?= $comment['photo'] ?? '' ?>" alt="">
                         <h4>Пользователь <?= $comment['login'] ?></h4>
-                        <img src="<?= $comment['photo'] ?? '' ?>" alt="">
+                        <strong>Дата написания <?= (new \DateTime($comment['date']))->format('d.m.Y H:i') ?></strong>
                     </div>
-                    <p>
+                    <p class="border p-2">
                         <?= $comment['text'] ?>
                     </p>
                 </div>
@@ -42,11 +41,11 @@ require  __DIR__ . "/layout/header.php";
         </div>
 
         <?php if(isset($_COOKIE['token'])): ?>
-            <div>
+            <div class="mb-5">
                 <h3>Добавить комментарий</h3>
                 <form class="d-flex flex-column justify-content-start align-items-start" id="form">
                     <input class="form-record" name="recordId" hidden="hidden" value="<?= $record['id'] ?>" type="text">
-                    <textarea name="text"></textarea >
+                    <textarea style="resize: none;" class="w-50" name="text"></textarea >
                     <span class="textarea-error text-danger"></span>
                     <button>Добавить</button>
                     <span class="form-error text-danger"></span>

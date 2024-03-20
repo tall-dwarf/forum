@@ -8,14 +8,19 @@ require  __DIR__ . "/layout/header.php";
             <div class="forum-sidebar">
                 <form>
                     <h4>Ключевые слова</h4>
-                    <input name="name" type="text">
+                    <input value="<?= $_GET['name'] ?? ''  ?>" name="name" type="text">
 
                     <h4>Теги</h4>
                     <ul class="tag-list">
                         <?php foreach ($tags as $tag): ?>
                         <li class="tag-item">
                             <label for="tag<?= $tag['id'] ?>"><?= $tag['name'] ?></label>
-                            <input id="tag<?= $tag['id'] ?>" value="<?= $tag['id'] ?>" name="tag[]" type="checkbox">
+                            <input
+                                <?php if(isset($_GET['tag']) && in_array($tag['id'], $_GET['tag']) ): ?>
+                                    checked
+                                <?php endif; ?>
+                                id="tag<?= $tag['id'] ?>"
+                                value="<?= $tag['id'] ?>" name="tag[]" type="checkbox">
                         </li>
                         <?php endforeach; ?>
                     </ul>
