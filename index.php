@@ -43,8 +43,6 @@ class AuthMiddleware
 }
 
 $router = Router::create();
-$router->getContainer()->singleton(UserRegisterValidate::class, UserRegisterValidate::class);
-$router->getContainer()->singleton(UserAuthValidate::class, UserAuthValidate::class);
 
 $router->setupView(__DIR__ . '/views');
 

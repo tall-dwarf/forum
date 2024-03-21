@@ -46,10 +46,11 @@ class Hemiflame
     /**
      * @throws QueryException
      */
-    public function create(array $values)
+    public function create(array $values): string
     {
         $this->query->insertInto($this->table)->set($values);
         $this->query->execute();
+        return $this->query->getLastInsertId();
     }
 
     /**

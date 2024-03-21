@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class CommentController
 {
-    public function store(ServerRequestInterface $request, CommentStoreValidate $storeValidate)
+    public function store(ServerRequestInterface $request, CommentStoreValidate $storeValidate, Comment $comment)
     {
         $errors = $storeValidate->getErrors();
         if(count($errors)){
@@ -19,7 +19,6 @@ class CommentController
         $data = $storeValidate->getData();
         $user = $request->getAttribute('user');
 
-        $comment = new Comment();
         $comment->create(['user_id' => $user['id'], 'record_id' => (int)$data['recordId'], 'text' => $data['text']]);
 
         return new JsonResponse(['ok' => true]);

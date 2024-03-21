@@ -19,26 +19,22 @@ class UserController
     {
         return $view->make('auth');
     }
-    public function register(View $view, UserRegisterValidate $userRegister){
+    public function register(View $view, UserRegisterValidate $userRegister, User $user){
         if($userRegister->isValid()) {
             return $view->make('register',
                 ['errors' => $userRegister->getErrors(), 'body' => $userRegister->getData()]);
         }
-
         try {
             $data = $userRegister->getData();
-
-            $user = new User();
-            $userData = $user->create($data);
-
-            UsersAuthService::setToken($userData['token']);
+            $userToken = $user->create($data);
+            UsersAuthService::setToken($userToken);
             return new RedirectResponse("/profile");
         }catch (\Exception $exception){
             return $view->make('register', ['registerError' => $exception->getMessage()]);
         }
     }
 
-    public function auth(ServerRequestInterface $request, View $view, UserAuthValidate $authValidate){
+    public function auth(View $view, UserAuthValidate $authValidate, User $user){
         if($authValidate->isValid()) {
             return $view->make('auth',
                 ['errors' => $authValidate->getErrors(), 'body' => $authValidate->getData()]);
@@ -46,7 +42,6 @@ class UserController
 
         try {
             $data = $authValidate->getData();
-            $user = new User();
 
             $userData = $user->getUser($data['password'], $data['email']);
             $user->refreshQuery();

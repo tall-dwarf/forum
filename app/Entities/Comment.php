@@ -7,7 +7,6 @@ use HemiFrame\Lib\SQLBuilder\QueryException;
 class Comment extends Hemiflame
 {
     protected string $table = 'comment';
-    protected array $columns = ['id', 'user_id', 'record_id', 'text'];
 
     /**
      * @throws QueryException

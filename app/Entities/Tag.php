@@ -7,7 +7,6 @@ use HemiFrame\Lib\SQLBuilder\QueryException;
 class Tag extends  Hemiflame
 {
     protected string $table = 'tag';
-    protected array $columns = ['id', 'name'];
 
     /**
      * @throws QueryException

@@ -16,8 +16,8 @@ class ProfileController
         return $view->make('profile', ['user' => $request->getAttribute('user')]);
     }
 
-
-    public function loadPhoto(View $view, ServerRequestInterface $request)
+//  На лету не получилось сделать resize
+    public function loadPhoto(View $view, ServerRequestInterface $request, User $user)
     {
         $userData = $request->getAttribute('user');
         $photo = $request->getUploadedFiles()['photo'];
@@ -35,7 +35,6 @@ class ProfileController
         $image->resize(100, 100);
         $image->save($photoPath);
 
-        $user = new User();
         $user->update($userData['id'], ['photo' => $photoPath]);
 
         if(file_exists($userData['photo'])){

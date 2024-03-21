@@ -14,7 +14,7 @@ class User extends Hemiflame
      * @throws QueryException
      * @throws \Exception
      */
-    public function create(array $values): array
+    public function create(array $values): string
     {
         $user = $this->getByField('email', $values['email']);
         if($user){
@@ -31,7 +31,7 @@ class User extends Hemiflame
         ];
 
         parent::create($userData);
-        return $userData;
+        return $userData['token'];
     }
 
     /**

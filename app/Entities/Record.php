@@ -11,7 +11,6 @@ use NilPortugues\Sql\QueryBuilder\Syntax\OrderBy;
 class Record extends Hemiflame
 {
     protected string $table = 'record';
-    protected array $columns = ['id', 'name', 'date', 'text', 'user_id'];
 
     public function getAll(array $params): ?array
     {
@@ -52,7 +51,7 @@ class Record extends Hemiflame
         return $this->query->fetchFirstArray();
     }
 
-    public function create(array $values)
+    public function create(array $values): string
     {
         $this->query->insertInto($this->table)->set(
             ['name' => $values['data']['name'], 'text' => $values['data']['text'], 'user_id' => $values['user']['id']]);
@@ -66,5 +65,7 @@ class Record extends Hemiflame
             ->values(['record_id', 'tag_id'],
             array_map(fn($tag) => [$recordId, $tag], $values['data']['tags']));
         $this->query->execute();
+
+        return $recordId;
     }
 }
