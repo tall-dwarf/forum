@@ -1,3 +1,4 @@
 /vendor
 /app/DataBase
 /app/Entities/Entity.php
+.idea
